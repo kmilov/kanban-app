@@ -1,11 +1,11 @@
 # Webpack Boilerplate
 
 a pretty simple development environment for Javascript/HTML/CSS written in nodejs
-the actual implementation have the following tasks:
+the actual implementation have the following capabilities:
 
 * Webpack
-** Hot Module reload / HTML Reload
-** jQuery
+* Hot Module reload / HTML Reload
+* jQuery
 
 
 to start just run 
