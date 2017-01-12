@@ -1,6 +1,12 @@
 // Entry point with ES6 support
 // Happy Coding!
-'use strict';
-
-const webpackReadyDebugMessage = '%cbundle ready, happy coding :)...';
-console.log(webpackReadyDebugMessage, "color: #ddd;font-style: italic;}");
+/* @jsx h*/
+module.hot.accept();
+const $ = require('jquery');
+$.fn.red = function() {
+  return this.each(function () {
+    $(this).css({
+      color: 'blue'
+    });
+  })
+}

@@ -21,7 +21,7 @@ var bundler = new webpackDevServer(compiler, {
 
   // Webpack Dev Server takes this path to save the output file
   publicPath: '/',
-  
+
   hot: true,
   quite: false,
   noInfo: false,
@@ -30,6 +30,6 @@ var bundler = new webpackDevServer(compiler, {
   }
 })
 
-bundler.listen(8080, 'localhost', function() {
+bundler.listen(3000, 'localhost', function() {
   console.log("Bundling project, please wait...");
 })
