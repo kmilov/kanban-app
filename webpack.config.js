@@ -5,7 +5,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 var ReloadPlugin = require('reload-html-webpack-plugin');
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   template: 'app/index.html',
-  inject: 'body'
+  inject: 'body',
+  minify: {
+    collapseWhitespace: true
+  }
 });
 
 module.exports = {
@@ -33,8 +36,9 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: [path.resolve(__dirname,'node_modules')],
         loader: 'babel-loader',
+        babelrc: false,
         query: {
-          presets: ['es2015', 'react'],
+          presets: ['react', 'es2015'],
         }
       }
     ]

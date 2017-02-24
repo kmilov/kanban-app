@@ -3,8 +3,406 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <title>get shit done =)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,body, #root {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #eee;
+        font-family: "Helvetica Neu", Helvetica, Arial, sans-serif;
+      }
+
+      h1 {
+        font-weight: 200;
+        color: #3b414c;
+        font-size: 20px;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .App {
+        white-space: nowrap;
+        height: 100%;
+      }
+
+      .List {
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        white-space: normal;
+        height: 100%;
+        width: 33%;
+        padding: 0 20px;
+        overflow: auto;
+      }
+
+      .List:not(:last-child):after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1px;
+        height: 99%;
+        background: linear-gradient(to bottom, #eee, #ccc 50%, #eee 100%) fixed;
+      }
+
+      .Card {
+        position: relative;
+        z-index: 1;
+        background: #fff;
+        width: 100%;
+        padding: 10px 10px 10px 15px;
+        margin: 0 0 10px 0;
+        overflow: auto;
+        border: 1px solid #e5e5df;
+        border-radius: 3px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, .25);
+      }
+
+      .Card__title {
+        font-weight: bold;
+        border-bottom: solid 5px transparent;
+      }
+
+      .Card__title:before {
+        display: inline-block;
+        width: 1em;
+        content: ">";
+      }
+
+      .Card__title--is-open:before {
+        content: "V";
+      }
+
+      .CheckList__task:first-child {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: dashed 1px #ddd;
+      }
+      .CheckList__task--remove:after {
+        display: inline-block;
+        color: #d66;
+        content: "x";
+      }
+
+      .CheckList--add-task {
+        border: 1px dashed #bbb;
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 3px;
+      }
+
+      .toggle-enter {
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      .toggle-enter.toggle-enter-active {
+        max-height: 300px;
+        overflow: hidden;
+        transition: max-height .25 ease-in;
+      }
+
+      .toggle-leave {
+        max-height: 300px;
+        overflow: hidden;
+      }
+
+      .toggle-leave.toggle-leave-active {
+        max-width: 0;
+        overflow: hidden;
+        transition: max-height .25s ease-out;
+      }
+
+      /*input {
+        padding: 5px;
+        width: 120px;
+        margin-top: 10px;
+      }
+
+      .item {
+        background-color: #efefef;
+        cursor: pointer;
+        display: block;
+        margin-bottom: 1px;
+        padding: 8px 12px;
+        width: 120px;
+      }
+
+      .example-enter {
+        opacity: 0;
+        tarnsform: translateX(-250px);
+      }
+
+      .example-enter.example-enter-active {
+        opacity: 1;
+        transform: translateX(0);
+        transition: .3s;
+
+      }
+      .example-leave {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .example-leave.example-leave-active {
+        opacity: 0;
+        transform: translateX(250px);
+        transition: .3s;
+      }
+
+      .example-appear {
+        opacity: 0;
+        transform: translateX(0);
+      }
+
+      .example-appear.example-appear-active {
+        opacity: 1;
+        transform: translateX(0);
+        transition: 2s;
+      }*/
+
+      body {
+        margin: 0;
+        font: 16px/1 sans-serif;
+      }
+
+      menu ul {
+        margin: 0;
+        padding: 0;
+      }
+
+      menu li {
+        display: inline-block;
+        padding: 5px;
+      }
+      a.active {
+        color: #444;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      header {
+        padding: 10px;
+        background-color: #333;
+        color: #ccc;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      menu {
+        background-color: #ccc;
+        padding: 5px;
+        margin-top: 0;
+        margin-bottom: 10px;
+      }
+    </style>
   </head>
   <body>
-    
+    <div id="root"></div>
+    <!-- <svg id="panel" style="background:#f8f8f8;width:100%;height:100%" ></svg> -->
+    <script>
+      // var panel = document.getElementById('panel'),
+      //     panelWidth = panel.clientWidth,
+      //     panelHeigh = panel.clientHeight;
+      //
+      // var canvas = Snap("#panel");
+      //
+      // var xAxis = canvas.line(panelWidth / 2, 0, panelWidth/2, panelHeigh)
+      // var yAxis = canvas.line(0, panelHeigh / 2, panelWidth, panelHeigh / 2)
+      // var axes = canvas.group(xAxis, yAxis);
+      //
+      //
+      //
+      // axes.attr({
+      //   strokeWidth: 0.1,
+      //   stroke: 'black'
+      // });
+      //
+      // var steps = 50;
+      // var maxSteps = Math.floor(panelWidth/2);
+      // var count = 0;
+      //
+      // for(var i=steps; i < maxSteps; i+=steps) {
+      //   var leftText = count*-1;
+      //   var rightText = count;
+      //
+      //   var rightPos = {
+      //     x: ((panelWidth/2)+i)-(steps)-4,
+      //     y: (panelHeigh/2)+20
+      //   }
+      //
+      //   var leftPost = {
+      //     x: ((panelWidth/2)-i)+((steps)-3),
+      //     y: (panelHeigh/2)+20
+      //   }
+      //
+      //   var line = canvas.line((panelWidth/2)+i,(panelHeigh/2), (panelWidth/2)+i, (panelHeigh/2)+5);
+      //   var line2 = canvas.line((panelWidth/2)-i,(panelHeigh/2), (panelWidth/2)-i, (panelHeigh/2)+5);
+      //   var glines = canvas.group(line, line2);
+      //   glines.attr({
+      //     strokeWidth: 0.2,
+      //     stroke: 'black'
+      //   })
+      //
+      //   var numr = canvas.text(rightPos.x, rightPos.y, rightText);
+      //   var numl = canvas.text(leftPost.x, leftPost.y, leftText);
+      //   var nums = canvas.group(numr, numl);
+      //   nums.attr({'font-size': 12})
+      //
+      //   count += 1;
+      // }
+      //
+      // function x(coord) {
+      //   if(coord === 0) {
+      //     return (panelWidth/2)
+      //   }
+      //   if (coord == 1) {
+      //     return (panelWidth/2)+steps
+      //   }
+      //
+      //   return (panelWidth/2)+(steps*coord);
+      //
+      // }
+      //
+      // function y(coord) {
+      //   if(coord === 0) {
+      //     return (panelHeigh/2)
+      //   }
+      //   if (coord == 1) {
+      //     return (panelHeigh/2)-steps
+      //   }
+      //
+      //   return (panelHeigh/2)-(steps*coord);
+      //
+      // }
+      //
+      // function drawCircle(r, ox, oy) {
+      //   var prevx=r,
+      //       prevy = 0;
+      //   for(var deg = 0; deg < 361; deg++) {
+      //     var cx = r*Math.cos(deg/180*Math.PI) + ox;
+      //     var cy = r*Math.sin(deg/180*Math.PI) + oy;
+      //     var line = canvas.line(x(prevx), y(prevy), x(cx), y(cy));
+      //     line.attr({strokeWidth: 1, stroke: 'black'})
+      //     prevx = cx;
+      //     prevy = cy;
+      //   }
+      // }
+      //
+      // var prevx=0,
+      //     prevy = 0;
+      // for(var i=0; i < 10; i+= 1) {
+      //   var cy = Math.round(Math.sin(i/180*Math.PI));
+      //   var line = canvas.line(x(prevx), y(prevy), x(i), y(cy));
+      //   line.attr({strokeWidth: 1, stroke: 'black'});
+      //   prevx = i;
+      //   prevy = cy;
+      // }
+
+      // y = mx + b
+
+
+      // var paper = Snap('#panel');
+      //
+      // var spacer = 70;
+      // var l = 0;
+      // var searchDl = 1;
+      //
+      // var path = paper.path('m153.5,184c53,81 256,84 300,-13')
+      // .attr({
+      //     stroke: 'gray',
+      //     strokeWidth: 3,
+      //     fill: 'none'
+      // });
+      // var pt = path.getPointAtLength(l);
+      // var pbbs = path.getBBox()
+      // var totLen = path.getTotalLength();
+      //
+      // var c3 = paper.circle(pbbs.x2 - pbbs.x, pbbs.y2, 15);
+      //
+      //
+      // var cGroup = paper.g();
+      // cGroup.add(c3);
+      //
+      // var mySet = cGroup.selectAll("*");
+      //
+      // start = function () {
+      //     this.data("ox", +this.getBBox().cx );
+      //     this.data("oy", +this.getBBox().cy );
+      //     this.attr({opacity: 1});
+      // },
+      // move = function (dx, dy) {
+      //     var whichDrag = this;
+      //     var tmpPt = {
+      //         x : this.data("ox") + dx,
+      //         y : this.data("oy") + dy
+      //     };
+      //     // move will be called with dx and dy
+      //     l = gradSearch(l, tmpPt);
+      //     pt = path.getPointAtLength(l);
+      //   //  this.attr({cx: pt.x, cy: pt.y});
+      //
+      //     mySet.forEach( function( el, i ) {
+      //         var which = whichDrag.data("index") - i;
+      //         pt = path.getPointAtLength(l + (which * spacer ));
+      //         if( !isNaN(pt.x) && !isNaN(pt.x) ) {
+      //              //el.attr({cx: pt.x, cy: pt.y});
+      //             el.transform('t' + (pt.x - el.attr('cx')) + ',' + (pt.y - el.attr('cy')) );
+      //         };
+      //     } );
+      //
+      // },
+      // up = function () {
+      //     // restoring state
+      //     this.attr({opacity: 1});
+      // },
+      //
+      // gradSearch = function (l0, pt) {
+      //     l0 = l0 + totLen;
+      //     var l1 = l0,
+      //         dist0 = dist(path.getPointAtLength(l0 % totLen), pt),
+      //         dist1,
+      //         searchDir;
+      //
+      //     if (dist(path.getPointAtLength((l0 - searchDl) % totLen), pt) >
+      //        dist(path.getPointAtLength((l0 + searchDl) % totLen), pt)) {
+      //         searchDir = searchDl;
+      //     } else {
+      //         searchDir = -searchDl;
+      //     }
+      //
+      //     l1 += searchDir;
+      //     dist1 = dist(path.getPointAtLength(l1 % totLen), pt);
+      //     while (dist1 < dist0) {
+      //         dist0 = dist1;
+      //         l1 += searchDir;
+      //         dist1 = dist(path.getPointAtLength(l1 % totLen), pt);
+      //     }
+      //     l1 -= searchDir;
+      //     return (l1 % totLen);
+      // },
+      //
+      // dist = function (pt1, pt2) {
+      //     var dx = pt1.x - pt2.x;
+      //     var dy = pt1.y - pt2.y;
+      //     return Math.sqrt(dx * dx + dy * dy);
+      // };
+      //cGroup.drag(move, start, up);
+      // mySet.forEach( function( el, i ) {
+      //     el.drag(move, start, up);
+      //     el.data("index", i);
+      // });
+    </script>
   </body>
 </html>
