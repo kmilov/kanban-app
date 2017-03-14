@@ -14,7 +14,10 @@ import List from './List';
 // and they way to get them is via refs or onSubmit
 class KanbanBoard extends Component {
   render() {
-
+    let cardModal = this.props.children && React.cloneElement(this.props.children, {
+      cards: this.props.cards,
+      cardCallbacks: this.props.cardCallbacks
+    })
     return (
       <div className="App">
         <List
@@ -38,6 +41,7 @@ class KanbanBoard extends Component {
           title="Done"
           cards={ this.props.cards.filter((card) => card.status === "done")}>
         </List>
+        {cardModal}
       </div>
     );
   }

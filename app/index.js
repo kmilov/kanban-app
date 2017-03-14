@@ -6,94 +6,20 @@ import React, {Component, PropTypes} from 'react'
 import ReactDOM from 'react-dom'
 import {Router, Route, Link, IndexRoute, hashHistory, browserHistory} from 'react-router'
 import KanbanBoardContainer from './KanbanBoardContainer'
+import KanbanBoard from './KanbanBoard'
+import NewCard from './NewCard'
+import EditCard from './EditCard'
+
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 
-import About from './routesample/About'
-import Home from './routesample/Home'
-import Repos from './routesample/Repos'
-import RepoDetails from './routesample/RepoDetails'
-import ServerError from './routesample/ServerError'
-
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <header>App</header>
-        <menu>
-          <ul>
-            <li><Link to="about" activeClassName="active">About</Link></li>
-            <li><Link to="repos" activeClassName="active">Repos</Link></li>
-          </ul>
-        </menu>
-        {this.props.children}
-      </div>
-    )
-  }
-}
-
-
-class AnimatedShoppingList extends Component {
-  constructor() {
-    super(...arguments)
-
-    this.state = {
-      items: [
-        {id: 1, name: 'Milk'},
-        {id: 2, name: 'Yogurt'},
-        {id: 3, name: 'Orange Juice'}
-      ]
-    }
-  }
-
-  handleChange(evt) {
-    if(evt.key === 'Enter') {
-      let newItem = {id:Date.now(), name:evt.target.value}
-
-      let newItems = this.state.items.concat(newItem);
-      evt.target.value=''
-      this.setState({ items:newItems})
-    }
-  }
-
-  handleRemove(i) {
-    let newItems = this.state.items
-    newItems.splice(i, 1)
-    this.setState({items: newItems})
-  }
-
-  render() {
-    let shippingItems = this.state.items.map((item, i) => {
-      return <div key={item.id} className="item" onClick={this.handleRemove.bind(this, i)}>
-        {item.name}
-      </div>
-    })
-
-    return(
-      <div>
-        <ReactCSSTransitionGroup
-          transitionName="example"
-          transitionEnterTimeout={300}
-          transitionLeaveTimeout={300}
-          transitionAppear={true}
-          transitionAppearTimeout={300}>
-          {shippingItems}
-        </ReactCSSTransitionGroup>
-        <input type="text" value={this.state.newItem} onKeyDown={this.handleChange.bind(this)} />
-      </div>
-    )
-  }
-}
-
 ReactDOM.render((
-  <Router history={browserHistory}>
-    <Route path="/" component={App}>
-      <IndexRoute component={Home} />
-      <Route path="about" component={About} title="About Us" />
-      <Route path="repos" component={Repos}>
-        <Route path="/repo/:repo_name" component={RepoDetails} />
+  <Router history={hashHistory}>
+    <Route component={KanbanBoardContainer}>
+      <Route path="/" component={KanbanBoard}>
+        <Route path="new" component={NewCard} />
+        <Route path="edit/:card_id" component={EditCard} />
       </Route>
-      <Route path="error" component={ServerError} />
     </Route>
   </Router>
 ), document.getElementById('root'));

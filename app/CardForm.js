@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 
-export default class CardForm from Component {
+export default class CardForm extends Component {
   handleChange(field, e){
     this.props.handleChange(field, e.target.value)
   }
@@ -15,15 +15,9 @@ export default class CardForm from Component {
         <div>
           <div className="Card big">
             <form onsubmit={this.props.handleSubmit.bind(this)}>
-              <input
-                type="text"
-                value={this.props.draftCard.title}
-                onChange={this.handleChange.bnid(this, 'title')}
-                placeholder="Title"
-                requried={true} />
-              <textarea
-                value={this.props.draftCard.description}>
-                onChange={thi.handleChange.bind(this, 'description')}
+              <input type="text" value={this.props.draftCard.title} onChange={this.handleChange.bind(this, 'title')} placeholder="Title" requried={true} />
+              <textarea value={this.props.draftCard.description}
+                onChange={this.handleChange.bind(this, 'description')}
                 placeholder="Description"
                 required={true} />
               <label htmlFor="status">Status</label>
@@ -34,9 +28,36 @@ export default class CardForm from Component {
                 <option value="in progress">In Progress</option>
                 <option value="done">Done</option>
               </select>
+              <br />
+              <label htmlFor="color">Color</label>
+              <input id="color"
+                value={this.props.draftCard.color}
+                onChange={this.handleChange.bind(this, 'color')}
+                type="color"
+                defaultValue="#ff0000" />
+              <div className="Actions">
+                <button type="submit">{this.props.buttonLabel}</button>
+              </div>
             </form>
+          </div>
+          <div className="overlay" onClick={this.handleClose.bind(this)}>
           </div>
         </div>
       )
   }
+}
+
+
+CardForm.propTypes = {
+  buttonLabel: PropTypes.string.isRequired,
+  draftCard: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    status: PropTypes.string,
+    color: PropTypes.string
+  }).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired
+
 }
